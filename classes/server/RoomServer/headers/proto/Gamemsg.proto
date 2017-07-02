@@ -1,0 +1,412 @@
+syntax = "proto2";
+
+package Gamemsg;
+/////////////////////////////////Common///////////////////////////////////
+message Location_latLng{
+	optional double jingdu = 1[default = 1000];
+	optional double weidu = 2[default = 1000];
+	optional bool permissiondenied = 3;//Android权限是否被禁止
+	optional int32 userid = 4;
+	optional string city = 5;
+	optional string district = 6;
+	optional string address = 7;
+}
+/////////////////////////////////用户登录//////////////////////////////////
+
+message Logon_MC_LogonByUserID{
+	enum enPwdType{
+		NORMAL = 1;
+		WECHAT_TOKEN = 2;
+	}
+	required uint32 userid = 1;
+	required string password = 2;
+	optional enPwdType pwdtype = 3[default = NORMAL];
+}
+
+message Logon_MS_LogonRes{
+	optional int32 err = 1;
+	optional int32 tableid = 2[default = -1];
+}
+
+/////////////////////////////////用户数据//////////////////////////////////
+message User_MS_WealthChange{
+	optional int32 roomcardchangenum = 1;
+	optional int32 typecode = 2;
+	optional string params = 3;
+}
+
+message User_MS_StatusChange{
+	optional uint32 userid = 1;
+	optional int32 userstatus = 2;
+	optional int32 tableid = 3;
+	optional int32 chairid = 4;
+}
+
+//////////////////////////////////////////////////其他//////////////////////////////////////////////////
+
+message Err_MS_Err {
+	required uint32 err = 1;//错误码
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+message ms_standup{
+	required uint32 userid = 1;
+}
+message mc_dismiss{
+	required bool agree = 1;
+}
+message ms_dismiss_confirm{
+	required uint32 calleruserid = 1;
+	repeated uint32 agreeuserids = 2;
+	required uint32 lefttime = 3;//seconds
+}
+message ms_dismiss_fail{
+	required uint32 notagreeuserid = 1;
+}
+//桌子里面语音聊天
+message mc_ms_talk{
+	required uint32 userid = 1;
+	required string talkurl = 2;
+	required uint32 time = 3;
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// optional int32 mjType = 1;//游戏种类
+// optional int32 rolls = 2;//游戏局数
+// optional int32 people = 3;//人数
+// optional string options = 5;//可选玩法
+// optional int32 fans = 6;//起胡番数
+message room_info {
+    optional int32 roomID = 1;
+    optional int32 roomCreaterUserID = 2; //房主
+    optional int32 rolls = 3; //游戏局数
+    optional int32 people = 4;//人数
+    optional string createParams = 5; //房间创建参数
+    optional int32 rollsCnt = 6; //玩的局数计数
+}
+
+message mc_create_room {
+    optional string createParams = 1;
+    optional int32 rolls = 2;//游戏局数
+    optional int32 people = 3;//人数
+}
+
+message ms_create_room {
+    optional int32 err = 1;
+}
+
+message mc_join_room {
+    optional int32 roomID = 1;
+}
+
+message ms_join_room {
+    optional int32 err = 1;
+}
+
+message ms_room_info {
+    optional room_info roomInfo = 1; //房间信息
+}
+
+message mc_leave_room {
+
+}
+
+message ms_leave_room {
+    optional int32 userid = 1;
+}
+
+message room_player_info {
+    optional int32 userid = 1;
+    optional string nickname = 2;
+    optional string playerIcon = 3;
+    optional string playerIP = 4;
+    optional int32 playerScore = 5; //玩家积分
+    optional int32 chairID = 6;
+    optional int32 status = 7; //玩家状态：0： None, 1：已准备完成，2：正在游戏
+    optional Location_latLng location = 8;//用户定位
+    optional int32 gender = 9;
+    optional int32 score = 10; //分数
+}
+
+message ms_room_players_info {
+    repeated room_player_info players = 1;
+}
+
+//玩家加入房间
+message ms_room_player_join {
+    optional room_player_info player = 1;
+}
+
+message ms_game_scene_free{
+
+}
+
+message ming_card {
+    optional int32 cardVal = 1;
+    optional int32 mingType = 2; //明牌类型：
+    optional int32 subMingType = 3; //子明牌类型，当明牌类型是吃牌时，此字段指明是左边吃，中间吃还是右边吃
+}
+
+message roll_player_data {
+    optional int32 userid = 1;
+    repeated int32 handCards = 2;
+    repeated ming_card mingCards = 3;
+    repeated int32 uselessCards = 4;
+    optional int32 huType = 5; //如果玩家已经胡了，这个字段指明胡牌类型，否则为0或者不指定
+    optional bool isInTingMode = 6; //是否处于听牌模式
+    optional int32 handCardsNum = 7; //手牌的数量（当玩家为本身时，此字段值为0）
+    optional int32 score = 8; //分数
+}
+//听牌
+message out_card {
+    optional int32 chairID = 1;
+    optional int32 cardVal = 2;
+}
+
+message ms_game_scene_play{
+    optional int32 zhuangID = 1;
+    optional int32 cardsRemainCnt = 2; //剩余牌的数量
+    optional int32 whosTurnChairID = 3;
+    repeated roll_player_data players = 4;
+    optional out_card watchCard = 5;
+    repeated int32 actions = 7; //客户端执行动作：2：吃，3：杠，4：碰，5：胡
+    optional int32 laiZiCardVal = 8;
+    optional int32 laiZiPiCardVal = 9;
+    optional int32 shaiZi1Val = 10;
+    optional int32 shaiZi2Val = 11;
+    optional int32 baoZiVal = 12;
+}
+
+message ms_game_start {
+    optional int32 zhuangID = 1;
+    optional int32 cardsRemainCnt = 2; //剩余牌的数量
+    repeated roll_player_data players = 3;
+    optional out_card watchCard = 5;
+    optional int32 laiZiCardVal = 8;
+    optional int32 laiZiPiCardVal = 9;
+    optional int32 shaiZi1Val = 10;
+    optional int32 shaiZi2Val = 11;
+    optional int32 baoZiVal = 12;
+}
+
+message balance_player {
+    optional int32 userid = 1;
+    repeated int32 handCards = 4;
+    repeated ming_card mingCards = 5;
+    optional int32 huType = 3; //胡牌的方式，没有胡，就是0
+    optional int32 huCardVal = 7; //胡的牌值
+    optional int32 fans = 8; //番数
+    optional int32 score = 9; //总得分
+    repeated int32 scoreTypes = 10; //得分类型
+    optional bool baoHu = 11; //是否包胡
+}
+
+message ms_game_over {
+    message stat {
+        optional int32 statType = 1;
+        optional int32 statValue = 2;
+    }
+    message stat_player {
+        optional int32 userid = 1;
+        repeated stat stats = 2;
+    }
+    message statistic {
+
+    }
+    optional int32 err = 1;
+    optional int32 result = 2; //0: 流局， 1：胡
+    repeated balance_player players = 3;
+    repeated stat_player statPlayers = 4; //牌局统计信息（房间结束时）
+}
+
+message ms_player_online {
+    optional int32 userid = 1;
+}
+
+message ms_player_offline {
+    optional int32 userid = 1;
+}
+
+message mc_player_ready {
+}
+
+message ms_player_ready {
+    optional int32 userid = 1;
+}
+
+//系统派牌
+message ms_system_dispatch_card {
+    optional int32 whosTurnChairID = 1; //轮到谁
+    optional int32 cardVal = 2; //派出的牌的值，如果为0，表示只制定轮到谁动作
+    repeated int32 actions = 3; //指明客户端需做出的动作
+    optional int32 cardsRemainCnt = 4; //系统牌剩余数量
+}
+
+//海底捞
+message ms_haidilao {
+    message player_card {
+        optional int32 chairID = 1;
+        optional int32 cardVal = 2;
+    }
+    repeated player_card cards = 1;
+}
+
+message mc_out_card {
+    optional int32 cardVal = 1;
+}
+
+message ms_out_card {
+    optional int32 userid = 1;
+    optional int32 cardVal = 2;
+}
+
+message mc_action_guo {
+
+}
+
+message ms_action_guo {
+    optional int32 userid = 1;
+}
+
+message mc_action_peng {
+    optional int32 cardVal = 1;
+}
+
+message ms_action_peng {
+    optional int32 userid = 1;
+    optional int32 cardVal = 2;
+    optional int32 sponsorUserID = 3; //被吃碰杠的玩家ID
+}
+
+message mc_action_hu {
+}
+
+message ms_action_hu {
+    optional int32 userid = 1;
+    optional int32 huType = 2;
+    optional int32 sponsorChairID = 3; //点炮玩家座位ID
+}
+
+message mc_action_gang {
+    optional int32 cardVal = 1;
+    optional int32 mingType = 2;
+    optional int32 subMingType = 3;
+}
+
+message ms_action_gang {
+    optional int32 userid = 1;
+    optional int32 cardVal = 2;
+    optional int32 mingType = 3;
+    optional int32 subMingType = 4;
+    optional int32 sponsorUserID = 5; //被吃碰杠的玩家ID
+}
+
+message mc_action_chi {
+    optional int32 cardVal = 1;
+    optional int32 chiType = 2;
+}
+
+message ms_action_chi {
+    optional int32 userid = 1;
+    optional int32 cardVal = 2;
+    optional int32 chiType = 3;
+    optional int32 sponsorUserID = 4; //被吃碰杠的玩家ID
+}
+
+message mc_player_ting {
+}
+
+message ms_player_ting {
+    optional int32 userid = 1;
+}
+
+message record_room {
+    message playerInfo {
+        optional int32 userid = 1;
+        optional string nickname = 2;
+        optional string playerIcon = 3;
+        optional int32 gender = 4;
+        optional int32 chairID = 5;
+        optional int32 score = 6;
+    }
+    optional int32 roomID = 1;
+    optional int32 people = 2;
+    optional int32 roomCreaterUserID = 3;
+    optional int64 startTime = 4;
+    repeated playerInfo playersInfo = 5;
+}
+
+message record_base {
+    message stat {
+        optional int32 userid = 1;
+        optional int32 score = 2;
+    }
+    message roll_info {
+        optional int32 laiZiCardVal = 1;
+        optional int32 laiZiPiCardVal = 2;
+        optional int32 hongZhongCardVal = 3;
+    }
+    optional int32 result = 1; //牌局结果
+    optional int64 startTime = 2; //开局开始时间
+    repeated stat statistics = 3;
+    optional balance_player winner = 4; //赢家结算信息
+    optional roll_info rollInfo = 5; //牌局信息
+    optional int32 loserUserID = 6; //输家玩家ID
+}
+
+message record_detail {
+    message player {
+        optional int32 userid = 1;
+        optional int32 chairID = 2;
+        repeated int32 handCards = 3;
+    }
+    message play_act {
+        message act_data {
+            optional int32 cardVal = 1;
+            optional int32 mingType = 2;
+            optional int32 subMingType = 3;
+            optional int32 whosTurnChairID = 4;
+            repeated int32 actions = 5;
+            optional int32 chiType = 6;
+            optional int32 cardsRemainCnt = 7;
+            optional int32 huType = 8;
+        }
+        optional int32 chairID = 1;
+        optional int32 act = 2;
+        optional act_data data = 3;
+    }
+    optional int32 zhuangChairID = 1;
+    optional int32 laiZiCardVal = 2;
+    optional int32 laiZiPiCardVal = 3;
+    repeated player players = 4;
+    repeated play_act actionsQue = 5;
+    optional int32 shaiZi1Val = 6;
+    optional int32 shaiZi2Val = 7;
+}
+
+message mc_game_record {
+}
+
+message ms_game_record {
+    message roll_stat {
+        optional int32 rollNO = 1;
+        optional int32 score = 2;
+    }
+    message stat {
+        optional int32 userid = 1;
+        repeated roll_stat rollStats = 2;
+    }
+    repeated stat statistics = 1;
+}
+
+message ms_prev_dismiss {
+    message stat {
+        optional int32 statType = 1;
+        optional int32 statValue = 2;
+    }
+    message stat_player {
+        optional int32 userid = 1;
+        repeated stat stats = 2;
+    }
+    optional int32 err = 1;
+    repeated stat_player statPlayers = 2; //牌局统计信息
+}
