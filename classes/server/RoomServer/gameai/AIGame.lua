@@ -163,6 +163,36 @@ function AIGame:onGameTimerMessage(dwTimerID,dwBindParam)
         end 
     end --]]
     local function out()
+        local function PrintTable( tbl , level, filteDefault)
+            local msg = ""
+            filteDefault = filteDefault or true --默认过滤关键字（DeleteMe, _class_type）
+            level = level or 1
+            local indent_str = ""
+            for i = 1, level do
+                indent_str = indent_str.."  "
+            end
+
+            print(indent_str .. "{")
+            for k,v in pairs(tbl) do
+                if filteDefault then
+                if k ~= "_class_type" and k ~= "DeleteMe" then
+                    local item_str = string.format("%s%s = %s", indent_str .. " ",tostring(k), tostring(v))
+                    print(item_str)
+                    if type(v) == "table" then
+                    PrintTable(v, level + 1)
+                    end
+                end
+                else
+                local item_str = string.format("%s%s = %s", indent_str .. " ",tostring(k), tostring(v))
+                print(item_str)
+                if type(v) == "table" then
+                    PrintTable(v, level + 1)
+                end
+                end
+            end
+            print(indent_str .. "}")
+        end
+
         local myPlayer = self.cache.players[self.UserID]
         --[[if myPlayer.uselessCards and #myPlayer.uselessCards > 0 then
             local index = math.random(1, #myPlayer.uselessCards)
@@ -187,8 +217,34 @@ function AIGame:onGameTimerMessage(dwTimerID,dwBindParam)
                 end 
             end 
         end 
-        local cardNdx = math.random(1, #cards)
-        local card = cards[cardNdx]
+        local toDrop = {}
+        for index, card in pairs(cards) do
+            --PrintTable(card)
+            if (card.num < 2) then
+                if (index - 1 == 0) then 
+                    if (card.cardType ~= cards[index + 1].cardType or card.cardType ~= cards[index + 1].cardType) then
+                        table.insert(toDrop, card)
+                    end
+                elseif (index == #cards) then
+                    if (card.cardType ~= cards[index - 1].cardType or card.cardType ~= cards[index - 1].cardType) then
+                        table.insert(toDrop, card)
+                    end
+                else
+                    if ((card.cardType ~= cards[index + 1].cardType or card.cardType ~= cards[index + 1].cardType) and (card.cardType ~= cards[index - 1].cardType or card.cardType ~= cards[index - 1].cardType)) then
+                        table.insert(toDrop, card)
+                    end
+                end
+            end 
+        end
+        local card = {}
+        if (#toDrop ~= 0) then
+            local cardNdx = math.random(1, #toDrop)
+            card = toDrop[cardNdx]
+        else
+            local cardNdx = math.random(1, #cards)
+            card = cards[cardNdx]
+        end
+        
         self:send("mc_out_card", {cardVal = card.cardVal})
         
         --[[保留一个赖子
