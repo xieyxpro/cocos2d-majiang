@@ -8,7 +8,7 @@ Define.Server = {
 --    IP = "192.168.1.95",
 --    IP = "192.168.1.87",
     --IP = "172.18.71.172",
-      IP = "192.168.199.239",
+      IP = "localhost",
 --    IP = "139.199.155.23",--ÉóºË·þÎñÆ÷
 --    IP = "loginserver.hgmj.jiezhansifang.com",
 --    IP = "349848-0.gz.1252485065.clb.myqcloud.com",
@@ -20,7 +20,7 @@ if device.platform == "android" or device.platform == "ios" then
 else
     --Define.DATA_SERVER = "http://192.168.1.95:8088"
     --Define.DATA_SERVER = "http://172.18.71.172:8088"  
-    Define.DATA_SERVER = "http://192.168.199.239:8088"
+    Define.DATA_SERVER = "http://localhost:8088"
 --    Define.DATA_SERVER = "http://api.hgmj.jiezhansifang.com"
 end
 

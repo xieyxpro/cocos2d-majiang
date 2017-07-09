@@ -20,10 +20,10 @@ function GameHelper.decorateCardImgWithSpecialMark(imgCard, cardVal, dir, markVa
     local spMark
     if cardVal == markValues.laiZiCardVal then 
         spMark = cc.Sprite:create(path .. "bg-handmah_lai.png")
-    elseif cardVal == markValues.laiZiPiCardVal then 
-        spMark = cc.Sprite:create(path .. "bg-handmah_pi.png")
-    elseif cardVal == markValues.hongZhongCardVal then 
-        spMark = cc.Sprite:create(path .. "bg-handmah_gang.png")
+    -- elseif cardVal == markValues.laiZiPiCardVal then 
+    --     spMark = cc.Sprite:create(path .. "bg-handmah_pi.png")
+    -- elseif cardVal == markValues.hongZhongCardVal then 
+    --     spMark = cc.Sprite:create(path .. "bg-handmah_gang.png")
     else 
         return
     end 
@@ -72,17 +72,17 @@ function GameHelper.decorateCardImgWithSpecialMarkFlat(imgCard, cardVal, dir, ma
             spMark = cc.Sprite:create(path .. "bg-mingmah_lai.png")
         end
     elseif cardVal == markValues.laiZiPiCardVal then 
-        if dir == GameDefine.DIR_TOP then 
-            spMark = cc.Sprite:create(path .. "bg-handmah_pi.png")
-        else
-            spMark = cc.Sprite:create(path .. "bg-mingmah_pi.png")
-        end
-    elseif cardVal == markValues.hongZhongCardVal then 
-        if dir == GameDefine.DIR_TOP then 
-            spMark = cc.Sprite:create(path .. "bg-handmah_gang.png")
-        else
-            spMark = cc.Sprite:create(path .. "bg-mingmah_gang.png")
-        end
+        -- if dir == GameDefine.DIR_TOP then 
+        --     spMark = cc.Sprite:create(path .. "bg-handmah_pi.png")
+        -- else
+        --     spMark = cc.Sprite:create(path .. "bg-mingmah_pi.png")
+        -- end
+    -- elseif cardVal == markValues.hongZhongCardVal then 
+    --     if dir == GameDefine.DIR_TOP then 
+    --         spMark = cc.Sprite:create(path .. "bg-handmah_gang.png")
+    --     else
+    --         spMark = cc.Sprite:create(path .. "bg-mingmah_gang.png")
+    --     end
     else 
         return
     end 

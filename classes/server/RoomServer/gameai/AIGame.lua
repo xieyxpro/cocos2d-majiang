@@ -83,27 +83,15 @@ function AIGame:MS_SYSTEM_DISPATCH_CARD(data)
 end
 
 function AIGame:MS_OUT_CARD(data)
-    --[[if not self.cache:isMyTurn() then
-        return 
-    end 
-    --开始做决策
-    self:SetGameTiemr(1, 1, 1, 0)--]]
+
 end
 
 function AIGame:MS_ACTION_GUO(data)
-    --[[if not self.cache:isMyTurn() then
-        return 
-    end 
-    --开始做决策
-    self:SetGameTiemr(1, 1, 1, 0)--]]
+
 end
 
 function AIGame:MS_ACTION_PENG(data)
-    --[[if not self.cache:isMyTurn() then
-        return 
-    end 
-    --开始做决策
-    self:SetGameTiemr(1, 1, 1, 0)--]]
+
 end
 
 function AIGame:MS_ACTION_HU(data)
@@ -111,19 +99,11 @@ function AIGame:MS_ACTION_HU(data)
 end
 
 function AIGame:MS_ACTION_GANG(data)
-    --[[if not self.cache:isMyTurn() then
-        return 
-    end 
-    --开始做决策
-    self:SetGameTiemr(1, 1, 1, 0)--]]
+
 end
 
 function AIGame:MS_ACTION_CHI(data)
-    --[[if not self.cache:isMyTurn() then
-        return 
-    end 
-    --开始做决策
-    self:SetGameTiemr(1, 1, 1, 0)--]]
+
 end
 
 function AIGame:MS_GAME_OVER(data)
@@ -155,53 +135,8 @@ function AIGame:send(msgName, data)
 end 
 
 function AIGame:onGameTimerMessage(dwTimerID,dwBindParam)
-    --[[local function canDo(rand)
-        if math.random(1, 10000) < rand then 
-            return true
-        else
-            return false 
-        end 
-    end --]]
-    local function out()
-        local function PrintTable( tbl , level, filteDefault)
-            local msg = ""
-            filteDefault = filteDefault or true --默认过滤关键字（DeleteMe, _class_type）
-            level = level or 1
-            local indent_str = ""
-            for i = 1, level do
-                indent_str = indent_str.."  "
-            end
-
-            print(indent_str .. "{")
-            for k,v in pairs(tbl) do
-                if filteDefault then
-                if k ~= "_class_type" and k ~= "DeleteMe" then
-                    local item_str = string.format("%s%s = %s", indent_str .. " ",tostring(k), tostring(v))
-                    print(item_str)
-                    if type(v) == "table" then
-                    PrintTable(v, level + 1)
-                    end
-                end
-                else
-                local item_str = string.format("%s%s = %s", indent_str .. " ",tostring(k), tostring(v))
-                print(item_str)
-                if type(v) == "table" then
-                    PrintTable(v, level + 1)
-                end
-                end
-            end
-            print(indent_str .. "}")
-        end
-
+    function __outCard()
         local myPlayer = self.cache.players[self.UserID]
-        --[[if myPlayer.uselessCards and #myPlayer.uselessCards > 0 then
-            local index = math.random(1, #myPlayer.uselessCards)
-            local data = {}
-            data.cardVal = myPlayer.uselessCards[index]
-            self:send("mc_out_card", data)
-            return
-        end--]]
-
         local cards = {}
         local gangCards = {}
         for _, handCards in pairs(myPlayer.handCards) do 
@@ -217,76 +152,55 @@ function AIGame:onGameTimerMessage(dwTimerID,dwBindParam)
                 end 
             end 
         end 
-        local toDrop = {}
-        for index, card in pairs(cards) do
-            --PrintTable(card)
-            if (card.num < 2) then
-                if (index - 1 == 0) then 
-                    if (card.cardType ~= cards[index + 1].cardType or card.cardType ~= cards[index + 1].cardType) then
-                        table.insert(toDrop, card)
-                    end
-                elseif (index == #cards) then
-                    if (card.cardType ~= cards[index - 1].cardType or card.cardType ~= cards[index - 1].cardType) then
-                        table.insert(toDrop, card)
-                    end
-                else
-                    if ((card.cardType ~= cards[index + 1].cardType or card.cardType ~= cards[index + 1].cardType) and (card.cardType ~= cards[index - 1].cardType or card.cardType ~= cards[index - 1].cardType)) then
-                        table.insert(toDrop, card)
-                    end
-                end
-            end 
-        end
-        local card = {}
-        if (#toDrop ~= 0) then
-            local cardNdx = math.random(1, #toDrop)
-            card = toDrop[cardNdx]
-        else
-            local cardNdx = math.random(1, #cards)
-            card = cards[cardNdx]
-        end
-        
-        self:send("mc_out_card", {cardVal = card.cardVal})
-        
-        --[[保留一个赖子
-        if myPlayer.laisOwned > 1 then 
-            if canDo(9000) then --出赖子的概率90%
-                local data = {}
-                data.cardVal = self.cache.laiZiCardVal
-                data.mingType = GameDefine.MING_TYPE_MING_GANG
-                data.subMingType = GameDefine.MING_TYPE_MING_GANG_SUB_GANG_PAI
-                self:send("mc_action_gang", data)
-                return
-            end 
-        end 
-        local cards = {}
-        local gangCards = {}
-        for _, handCards in pairs(myPlayer.handCards) do 
-            if handCards.num > 0 then 
-                for _, card in ipairs(handCards.cards) do 
-                    if card.num > 0 then 
-                        if self.cache:isGangCard(card.cardVal) then 
-                            table.insert(gangCards, card)
-                        else
-                            table.insert(cards, card)
-                        end 
-                    end 
-                end 
-            end 
-        end 
-        --把赖子皮和红中杠了
+        --把赖子杠了
         for _, card in ipairs(gangCards) do 
-            if canDo(9000) then --出杠牌的概率90%
+            if card.num > 1 then
                 local data = {}
                 data.cardVal = card.cardVal
                 data.mingType = GameDefine.MING_TYPE_MING_GANG
                 data.subMingType = GameDefine.MING_TYPE_MING_GANG_SUB_GANG_PAI
                 self:send("mc_action_gang", data)
                 return
-            end 
+            end
         end 
-        local cardNdx = math.random(1, #cards)
-        local card = cards[cardNdx]
-        self:send("mc_out_card", {cardVal = card.cardVal})--]]
+        
+        local card = {}
+        if (#cards == 0) then 
+            local cardNdx = math.random(1, #cards)
+            card = cards[cardNdx]
+        elseif (#cards == 1) then
+            card = cards[1]
+        else
+            local toDrop = {}
+            for index, card in pairs(cards) do
+                --PrintTable(card)
+                if (card.num < 2) then
+                    if (index - 1 == 0) then 
+                        if (card.cardType ~= cards[index + 1].cardType or card.cardType ~= cards[index + 1].cardType) then
+                            table.insert(toDrop, card)
+                        end
+                    elseif (index == #cards) then
+                        if (card.cardType ~= cards[index - 1].cardType or card.cardType ~= cards[index - 1].cardType) then
+                            table.insert(toDrop, card)
+                        end
+                    else
+                        if ((card.cardType ~= cards[index + 1].cardType or card.cardType ~= cards[index + 1].cardType) and (card.cardType ~= cards[index - 1].cardType or card.cardType ~= cards[index - 1].cardType)) then
+                            table.insert(toDrop, card)
+                        end
+                    end
+                end 
+            end
+        
+            if (#toDrop ~= 0) then
+                local cardNdx = math.random(1, #toDrop)
+                card = toDrop[cardNdx]
+            else
+                local cardNdx = math.random(1, #cards)
+                card = cards[cardNdx]
+            end
+        end
+        
+        self:send("mc_out_card", {cardVal = card.cardVal})
     end 
 
     local function hu()
@@ -330,11 +244,15 @@ function AIGame:onGameTimerMessage(dwTimerID,dwBindParam)
         self:send("mc_action_chi", {cardVal = self.cache.watchCard.cardVal, chiType = chiType})
     end 
 
+    local function out()
+        __outCard()
+    end 
+
     local function guo()
         self:send("mc_action_guo", {})
     end 
 
-    --[[local function doAction(action)
+    local function doAction(action)
         if action == GameDefine.PLAY_ACT_CHI then 
             chi()
         elseif action == GameDefine.PLAY_ACT_OUT then 
@@ -352,51 +270,12 @@ function AIGame:onGameTimerMessage(dwTimerID,dwBindParam)
         else 
             assert(false)
         end 
-    end --]]
-
+    end 
     if self.cache.actions and #self.cache.actions > 0 then 
-        --[[local actNdx = math.random(1, #self.cache.actions)
+        local actNdx = math.random(1, #self.cache.actions)
         local action = self.cache.actions[actNdx]
         doAction(action)
-        return--]]
-        local canhu = false
-        local canchi = false
-        local canganginitiative = false
-        local cangangwatch = false
-        local canpeng = false
-        for key, action in ipairs(self.cache.actions) do
-            if action == GameDefine.PLAY_ACT_HU then
-                canhu = true
-            elseif action == GameDefine.PLAY_ACT_CHI then
-                canchi = true
-            elseif action == GameDefine.PLAY_ACT_GANG_INITIATIVE then
-                canganginitiative = true
-            elseif action == GameDefine.PLAY_ACT_GANG_WATCH then
-                cangangwatch = true
-            elseif action == GameDefine.PLAY_ACT_PENG then
-                canpeng = true
-            end
-        end
-        if canhu then
-            hu()
-            return
-        end
-        if canchi then
-            chi()
-            return
-        end
-        if canganginitiative then
-            gangInitiative()
-            return
-        end
-        if cangangwatch then
-            gangWatch()
-            return
-        end
-        if canpeng then
-            peng()
-            return
-        end
+        return
     end 
     out()
 end

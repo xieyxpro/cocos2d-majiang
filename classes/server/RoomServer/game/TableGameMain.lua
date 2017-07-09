@@ -19,7 +19,7 @@ end
 
 function TableGameMain:reset()
     self.roomInited = false
-    self.hongZhongCardVal = GameDefine.CARD_TYPE_ZI * 10 + 5 --红中
+    self.hongZhongCardVal = GameDefine.CARD_TYPE_ZI * 10 + 9 --红中
     self.beiCardVal = GameDefine.CARD_TYPE_ZI * 10 + 4 --北风
     self.weiCardsNum = 14 --尾墩牌尾14张
     self.options = {}
@@ -226,7 +226,8 @@ end
 function TableGameMain:__isGangCard(cardVal)
     if cardVal == self.laiZiCardVal or 
         cardVal == self.laiZiPiCardVal or 
-        cardVal == self.hongZhongCardVal then 
+        cardVal == self.hongZhongCardVal 
+        then 
         return true 
     end 
     return false
@@ -367,7 +368,8 @@ function TableGameMain:__containsGangPai(chairid, extraCardVal)
 
     local player = self.players[chairid]
     
-    if extraCardVal == self.laiZiPiCardVal or extraCardVal == self.hongZhongCardVal then 
+    if extraCardVal == self.laiZiPiCardVal or extraCardVal == self.hongZhongCardVal 
+        then 
         return true
     end 
     for _, handCards in pairs(player.handCards) do 
@@ -388,7 +390,7 @@ function TableGameMain:__iniLai(cardVal)
     local cardType = GameDefine.getCardType(cardVal)
     if cardType == GameDefine.CARD_TYPE_ZI then 
         if cardVal == self.hongZhongCardVal or cardVal == self.beiCardVal then 
-            self.laiZiCardVal = self.hongZhongCardVal + 1 --发财
+            self.laiZiCardVal =  self.hongZhongCardVal + 1 --发财
             self.laiZiPiCardVal = self.beiCardVal
         else 
             self.laiZiPiCardVal = cardVal
@@ -400,6 +402,7 @@ function TableGameMain:__iniLai(cardVal)
         local shortCardVal = (cardVal % 10)
         self.laiZiCardVal = shortCardVal == 9 and (cardType * 10 + 1) or (cardVal + 1)
     end 
+    self.laiZiPiCardVal = 0
 end 
 
 --是否胡牌并且分析胡牌的组合
@@ -578,11 +581,11 @@ function TableGameMain:__analyseHu(chairid)
                 cardType == GameDefine.CARD_TYPE_WAN or 
                 cardType == GameDefine.CARD_TYPE_SUO then 
                 if comp.compType == GameDefine.COMP_TYPE_JIANG then 
-                    if shortCardVal == 2 or 
-                        shortCardVal == 5 or 
-                        shortCardVal == 8  then 
+                    -- if shortCardVal == 2 or 
+                    --     shortCardVal == 5 or 
+                    --     shortCardVal == 8  then 
                         table.insert(huComps258, huComp)
-                    end
+                    -- end
                     break
                 end 
             end 
@@ -805,11 +808,11 @@ function TableGameMain:__canHu(chairid, extraCardVal, theOtherChairID, extraPara
                 cardType == GameDefine.CARD_TYPE_WAN or 
                 cardType == GameDefine.CARD_TYPE_SUO then 
                 if comp.compType == GameDefine.COMP_TYPE_JIANG then 
-                    if shortCardVal == 2 or 
-                        shortCardVal == 5 or 
-                        shortCardVal == 8  then 
+                    -- if shortCardVal == 2 or 
+                    --     shortCardVal == 5 or 
+                    --     shortCardVal == 8  then 
                         table.insert(huComps258, huComp)
-                    end
+                    -- end
                     break
                 end 
             end 
@@ -2697,8 +2700,8 @@ function TableGameMain:__autoAction(pServerUserItem)
         end 
         --查找红中或者赖子皮
         for _, cardVal in pairs(handCardsAry) do 
-            if cardVal == self.laiZiPiCardVal or 
-                cardVal == self.hongZhongCardVal then 
+            if cardVal == self.laiZiPiCardVal or cardVal == self.hongZhongCardVal
+                then 
                 out(cardVal)
                 return true
             end 

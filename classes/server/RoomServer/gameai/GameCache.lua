@@ -26,7 +26,7 @@ function GameCache:reset()
     self.players = {}
     self.laiZiCardVal = 0
     self.laiZiPiCardVal = 0
-    self.hongZhongCardVal = GameDefine.CARD_TYPE_ZI * 10 + 5 --红中
+    self.hongZhongCardVal = GameDefine.CARD_TYPE_ZI * 10 + 9 --红中
 
     self.zhuangID = 0
     self.whosTurnChairID = 0 --当前轮到的出牌的玩家ID
@@ -54,7 +54,7 @@ function GameCache:__init(params)
     self.players = {}
     self.laiZiCardVal = 0
     self.laiZiPiCardVal = 0
-    self.hongZhongCardVal = GameDefine.CARD_TYPE_ZI * 10 + 5 --红中
+    self.hongZhongCardVal = GameDefine.CARD_TYPE_ZI * 10 + 9 --红中
 
     self.zhuangID = 0
     self.whosTurnChairID = 0 --当前轮到的出牌的玩家ID

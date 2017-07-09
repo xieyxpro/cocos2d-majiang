@@ -1041,7 +1041,7 @@ function GamePlayLayer:initialize()
     local laiZiImgPath = Helper.getCardImgPathOfBottom(GameCache.laiZiCardVal)
     local laiZiPiImgPath = Helper.getCardImgPathOfBottom(GameCache.laiZiPiCardVal)
     self.imgLaiZi:loadTexture(laiZiImgPath)
-    self.imgLaiZiPi:loadTexture(laiZiPiImgPath)
+    self.imgLaiZiPi:loadTexture("GameScene/vertical/handmah_666.png")
     GameHelper.decorateCardImgWithSpecialMark(self.imgLaiZi, GameCache.laiZiCardVal, GameDefine.DIR_BOTTOM)
     GameHelper.decorateCardImgWithSpecialMark(self.imgLaiZiPi, GameCache.laiZiPiCardVal, GameDefine.DIR_BOTTOM)
     local turnPlayer = GameCache.playersByChair[GameCache.whosTurnChairID]
