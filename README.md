@@ -218,7 +218,10 @@ l.	function Network:send(serverName, msgName, data)
 想服务器发送消息请求
 
 ### 7 代码目录结构说明
-框架说明
+框架说明:
+
 ![image](https://github.com/xieyxpro/cocos2d-majiang/blob/master/Screenshots/8.png)
 
-游戏主要逻辑说明
+游戏主要逻辑说明:
+
+![image](https://github.com/xieyxpro/cocos2d-majiang/blob/master/Screenshots/9.png)
