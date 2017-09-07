@@ -1,5 +1,8 @@
 # cocos2d麻将
 
+## 视频展示
+[游戏视频By B站](https://www.bilibili.com/video/av14109165/)
+
 ## 界面截图
  1. 开始界面
  
