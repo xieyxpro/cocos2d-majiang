@@ -1,9 +1,0 @@
-syntax = "proto2"; 
-package StatDBRMsg;
-
-message Chat_GmCmdRecord{
-	required uint32 dwUserID = 1;
-	optional string strGMCmd = 2;
-	optional string strArgs = 3;
-	optional string strDateTime = 4;
-}
